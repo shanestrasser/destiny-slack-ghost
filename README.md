@@ -18,4 +18,4 @@ There are two options for testing:
         RewriteRule ^ghost.io(.*)$ http://127.0.0.1:6000/$1 [P,L]
         ```
         
-        Here, I've used port 6000 and the subdirectory is ghost.io. To hit the URL from the outside, I only have to hit `mysite.com/ghost.io`
+        Here, I've used port 6000 and the subdirectory is ghost.io. To hit the URL from the outside, I only have to hit `mysite.com/ghost.io`. Make sure the port is in a valid range (I had troubles using 3000).
