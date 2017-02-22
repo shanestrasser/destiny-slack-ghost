@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const server = app.listen(process.env.PORT || 6000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 
@@ -79,9 +79,12 @@ function handleQueries(q, res) {
 	console.log('doesnt like token')
     return;
   } */
+  console.log(q);
   if (q.text) {
     let code = q.text;
+    res.json(destinyapi.proccess_text(code)); 
 
+    /*
     if(! /^\d+$/.test(code)) { // not a digit
       res.send('U R DOIN IT WRONG. Enter a status code like 200 😒');
       return;
@@ -103,18 +106,9 @@ function handleQueries(q, res) {
       }
     ]};
     res.json(data);
-  } else {
-    res.json(destinyapi.help_message)
-    /*
-    let data = {
-      response_type: 'ephemeral', // private message
-      text: 'How to use /httpstatus command:',
-      attachments:[
-      {
-        text: 'Type a status code after the command, e.g. `/httpstatus 404`',
-      }
-    ]};
-    res.json(data);
     */
+  } else {
+    var data = destinyapi.proccess_text('help');
+    res.json(data); 
   }
 }
