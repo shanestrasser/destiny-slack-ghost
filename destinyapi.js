@@ -40,13 +40,13 @@ function _process_text(message) {
 
   switch (command) {
     case 'kd':
-      const DestinyApi = require('destiny-api-client');
-      let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
+      //const DestinyApi = require('destiny-api-client');
+      //let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
 
-      client.searchPlayer({membershipType: DestinyApi.psn, displayName: parameter})
-      .then(response => var memberId = response.membershipId);
-
-      //console.log(response);
+      //let response = await client.searchPlayer({membershipType: DestinyApi.psn, displayName: parameter});
+      //.then(response => var memberId = response.membershipId);
+      var response = _get_user_id('Markov-Man');
+      console.log(response);
       //var memberId = JSON.parse(response).membershipId;
       //console.log(memberId);
 
@@ -66,6 +66,18 @@ function _process_text(message) {
       return help_message;   
       break;
   }
+};
+
+function _get_user_id(name) {
+  let DestinyApi = require('destiny-api-client');
+  let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
+  client.searchPlayer({membershipType: DestinyApi.psn, displayName: name})
+  .then(function (data) {
+      console.log(data);
+      return data; // if readFile was successful, let's readAnotherFile
+    }, function (err) {
+      console.error(err)
+  });
 };
 
 function _get_command(message) {
@@ -89,9 +101,9 @@ function _get_command(message) {
   } else {
     return match;
   }
-}
+};
 
 function _get_parameter(message) {
   console.log(message);
   return 'Markov-Man';
-}
+};
