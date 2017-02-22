@@ -36,11 +36,35 @@ function _build_base_message(text_response) {
 
 function _process_text(message) {
   var command = _get_command(message);
+  var parameter = _get_parameter(message);
 
-  if(command.indexOf('help') > - 1) {
-    return help_message;
-  } else {
-    return _build_base_message(command);
+  switch (command) {
+    case 'kd':
+      const DestinyApi = require('destiny-api-client');
+      let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
+
+      client.searchPlayer({membershipType: DestinyApi.psn, displayName: parameter})
+      .then(response => var memberId = response.membershipId);
+
+      //console.log(response);
+      //var memberId = JSON.parse(response).membershipId;
+      //console.log(memberId);
+
+      //Statements executed when the result of expression matches value2
+      return _build_base_message('not implemented');
+      break  
+    case 'kda':
+      //Statements executed when the result of expression matches valueN
+      return _build_base_message('not implemented');
+      break
+    case 'time':
+      //Statements executed when the result of expression matches valueN
+      return _build_base_message('not implemented');
+      break
+    case 'help':
+    default:
+      return help_message;   
+      break;
   }
 };
 
@@ -65,4 +89,9 @@ function _get_command(message) {
   } else {
     return match;
   }
+}
+
+function _get_parameter(message) {
+  console.log(message);
+  return 'Markov-Man';
 }
