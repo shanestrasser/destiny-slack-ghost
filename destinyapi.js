@@ -1,3 +1,6 @@
+const DestinyApi = require('destiny-api-client');
+const MyApiKey = '39c516a91a234d1690f9d92079f9cbc4';
+
 module.exports = {
   proccess_text: function (message) {
     return _process_text(message);
@@ -35,49 +38,42 @@ function _build_base_message(text_response) {
 };
 
 function _process_text(message) {
-  var command = _get_command(message);
-  var parameter = _get_parameter(message);
+    var command = _get_command(message);
+    var parameter = _get_parameter(message);
 
-  switch (command) {
-    case 'kd':
-      //const DestinyApi = require('destiny-api-client');
-      //let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
-
-      //let response = await client.searchPlayer({membershipType: DestinyApi.psn, displayName: parameter});
-      //.then(response => var memberId = response.membershipId);
-      var response = _get_user_id('Markov-Man');
-      console.log(response);
-      //var memberId = JSON.parse(response).membershipId;
-      //console.log(memberId);
-
-      //Statements executed when the result of expression matches value2
-      return _build_base_message('not implemented');
-      break  
-    case 'kda':
-      //Statements executed when the result of expression matches valueN
-      return _build_base_message('not implemented');
-      break
-    case 'time':
-      //Statements executed when the result of expression matches valueN
-      return _build_base_message('not implemented');
-      break
-    case 'help':
-    default:
+    if(command.indexOf('help') > -1) {
       return help_message;   
-      break;
-  }
+    }
+
+    let client = new DestinyApi(MyApiKey);
+
+    return client.searchPlayer({membershipType: DestinyApi.psn, displayName: 'Markov-Man'})
+    .then(response => _process_command(response, command));
 };
 
-function _get_user_id(name) {
-  let DestinyApi = require('destiny-api-client');
-  let client = new DestinyApi('39c516a91a234d1690f9d92079f9cbc4');
-  client.searchPlayer({membershipType: DestinyApi.psn, displayName: name})
-  .then(function (data) {
-      console.log(data);
-      return data; // if readFile was successful, let's readAnotherFile
-    }, function (err) {
-      console.error(err)
-  });
+function _process_command(response, command) {
+    var user_id = _parse_response_for_id(response);
+
+    let client = new DestinyApi(MyApiKey);
+
+    return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
+    .then(response => _format_response(response, command));
+}
+
+function _format_response(response, command) {
+    let RatioString = response.mergedAllCharacters.results.allPvP.allTime.killsDeathsRatio.basic.value;
+    let RatioFloat = parseFloat(RatioString);
+    console.log(RatioFloat);
+    return 'KD Ratio: ' + RatioFloat.toFixed(4);
+}
+
+function _parse_response_for_id(response) {
+    if(response.length == 0) {
+      return 'sad day';
+    } else {
+      user_id = response[0].membershipId;
+      return user_id;
+    }
 };
 
 function _get_command(message) {
@@ -95,12 +91,7 @@ function _get_command(message) {
       return true;
     }
   });
-
-  if(match.indexOf('help') > - 1) {
-    return ghost_commands['help'];
-  } else {
-    return match;
-  }
+  return match;
 };
 
 function _get_parameter(message) {

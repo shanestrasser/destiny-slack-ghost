@@ -73,6 +73,14 @@ response:
   response_url: 'https://hooks.slack.com/commands/--- }
 */
 
+function buildResponse(textResponse) {
+    let data = {
+      response_type: 'in_channel', // public to the channle
+      text: textResponse,
+    };
+    return data;
+}
+
 function handleQueries(q, res) {
 /*   if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
     // the request is NOT coming from Slack!
@@ -82,7 +90,7 @@ function handleQueries(q, res) {
   console.log(q);
   if (q.text) {
     let code = q.text;
-    res.json(destinyapi.proccess_text(code)); 
+    destinyapi.proccess_text(code).then(response => res.json(buildResponse(response)));
 
     /*
     if(! /^\d+$/.test(code)) { // not a digit
