@@ -1,5 +1,5 @@
 const DestinyApi = require('destiny-api-client');
-const MyApiKey = '39c516a91a234d1690f9d92079f9cbc4';
+const MyApiKey = 'insert-key-here';
 
 module.exports = {
   proccess_text: function (message) {
