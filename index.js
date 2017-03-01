@@ -11,40 +11,40 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const server = app.listen(process.env.PORT || 3000, () => {
-  console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
+    console.log('Express server listening on port %d in %s mode', server.address().port, app.settings.env);
 });
 
 // Auth
 
 app.get('/slack', function(req, res){
-  console.log('app.get')
-  if (!req.query.code) { // access denied
-    res.redirect('http://www.girliemac.com/slack-httpstatuscats/');
-    return;
-  }
-  var data = {form: {
-      client_id: process.env.SLACK_CLIENT_ID,
-      client_secret: process.env.SLACK_CLIENT_SECRET,
-      code: req.query.code
-  }};
-  request.post('https://slack.com/api/oauth.access', data, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // Get an auth token
-      let token = JSON.parse(body).access_token;
-
-      // Get the team domain name to redirect to the team URL after auth
-      request.post('https://slack.com/api/team.info', {form: {token: token}}, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-          if(JSON.parse(body).error == 'missing_scope') {
-            res.send('Destiny-Slack-Ghost has been added to your team!');
-          } else {
-            let team = JSON.parse(body).team.domain;
-            res.redirect('http://' +team+ '.slack.com');
-          }
-        }
-      });
+    console.log('app.get')
+    if (!req.query.code) { // access denied
+        res.redirect('http://www.girliemac.com/slack-httpstatuscats/');
+        return;
     }
-  })
+    var data = {form: {
+        client_id: process.env.SLACK_CLIENT_ID,
+        client_secret: process.env.SLACK_CLIENT_SECRET,
+        code: req.query.code
+    }};
+    request.post('https://slack.com/api/oauth.access', data, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // Get an auth token
+            let token = JSON.parse(body).access_token;
+
+            // Get the team domain name to redirect to the team URL after auth
+            request.post('https://slack.com/api/team.info', {form: {token: token}}, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    if(JSON.parse(body).error == 'missing_scope') {
+                        res.send('Destiny-Slack-Ghost has been added to your team!');
+                    } else {
+                        let team = JSON.parse(body).team.domain;
+                        res.redirect('http://' +team+ '.slack.com');
+                    }
+                }
+            });
+        }
+    })
 });
 
 /* *******************************
@@ -52,11 +52,11 @@ app.get('/slack', function(req, res){
 /* ***************************** */
 
 app.get('/', (req, res) => {
-  handleQueries(req.query, res);
+    handleQueries(req.query, res);
 });
 
 app.post('/', (req, res) => {
-  handleQueries(req.body, res);
+    handleQueries(req.body, res);
 });
 
 /*
@@ -75,8 +75,8 @@ response:
 
 function buildResponse(textResponse) {
     let data = {
-      response_type: 'in_channel', // public to the channle
-      text: textResponse,
+        response_type: 'in_channel', // public to the channle
+        text: textResponse,
     };
     return data;
 }
@@ -87,10 +87,10 @@ function handleQueries(q, res) {
 	console.log('doesnt like token')
     return;
   } */
-  console.log(q);
-  if (q.text) {
-    let code = q.text;
-    destinyapi.proccess_text(code).then(response => res.json(buildResponse(response)));
+    console.log(q);
+    if (q.text) {
+        let code = q.text;
+        destinyapi.proccess_text(code).then(response => res.json(buildResponse(response)));
 
     /*
     if(! /^\d+$/.test(code)) { // not a digit
@@ -115,8 +115,8 @@ function handleQueries(q, res) {
     ]};
     res.json(data);
     */
-  } else {
-    var data = destinyapi.proccess_text('help');
-    res.json(data); 
-  }
+    } else {
+        var data = destinyapi.proccess_text('help');
+        res.json(data); 
+    }
 }
