@@ -1,0 +1,33 @@
+{
+  "name": "destiny-slack-ghost",
+  "version": "1.0.0",
+  "description": "Slack app for getting Destiny stats.",
+  "main": "index.js",
+  "dependencies": {	
+	"body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "foreman": "^2.0.0",
+	"request": "^2.75.0",
+	"destiny-api-client": "^0.1.1"},
+  "devDependencies": {
+	"body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "foreman": "^2.0.0",
+	"request": "^2.75.0",
+	"destiny-api-client": "^0.1.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shanestrasser/destiny-slack-ghost.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shanestrasser/destiny-slack-ghost/issues"
+  },
+  "homepage": "https://github.com/shanestrasser/destiny-slack-ghost#readme"
+}

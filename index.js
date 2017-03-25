@@ -87,11 +87,16 @@ function handleQueries(q, res) {
 	console.log('doesnt like token')
     return;
   } */
+  
     console.log(q);
     if (q.text) {
         let code = q.text;
-        destinyapi.proccess_text(code).then(response => res.json(buildResponse(response)));
-
+        destinyapi.proccess_text(code).then(response => res.json(response));
+    } else {
+		// Not sure we need this?
+		destinyapi.proccess_text('help').then(response => res.json(response));
+    }
+	
     /*
     if(! /^\d+$/.test(code)) { // not a digit
       res.send('U R DOIN IT WRONG. Enter a status code like 200 😒');
@@ -115,8 +120,5 @@ function handleQueries(q, res) {
     ]};
     res.json(data);
     */
-    } else {
-        var data = destinyapi.proccess_text('help');
-        res.json(data); 
-    }
+
 }
