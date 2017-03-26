@@ -4,7 +4,8 @@ const httpstatus = require('./httpstatus');
 const request = require('request');
 const express = require('express');
 const bodyParser = require('body-parser');
-const destinyapi = require("./destinyapi.js");
+const destinyapi = require('./destinyapi.js');
+const twitchapi = require('./twitchapi.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -73,29 +74,21 @@ response:
   response_url: 'https://hooks.slack.com/commands/--- }
 */
 
-function buildResponse(textResponse) {
-    let data = {
-        response_type: 'in_channel', // public to the channle
-        text: textResponse,
-    };
-    return data;
-}
-
-function handleQueries(q, res) {
-/*   if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
+function handleQueries(q, res) {	
+	/*   if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
     // the request is NOT coming from Slack!
 	console.log('doesnt like token')
     return;
-  } */
-  
-    console.log(q);
-    if (q.text) {
-        let code = q.text;
-        destinyapi.proccess_text(code).then(response => res.json(response));
-    } else {
+	*/
+	
+	console.log(q);
+	if(q.text) {
+		let code = q.text;
+		destinyapi.proccess_text(code).then(response => res.json(response));
+	} else {
 		// Not sure we need this?
 		destinyapi.proccess_text('help').then(response => res.json(response));
-    }
+	}
 	
     /*
     if(! /^\d+$/.test(code)) { // not a digit

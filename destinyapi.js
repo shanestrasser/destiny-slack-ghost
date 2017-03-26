@@ -1,6 +1,8 @@
 const DestinyApi = require('destiny-api-client');
 const MyApiKey = '39c516a91a234d1690f9d92079f9cbc4';
 
+var user_dictionary = new Object();
+
 module.exports = {
     proccess_text: function (message) {
         return _process_text(message);
@@ -85,20 +87,36 @@ function _process_text(message) {
 		return _build_private_message_promise('Invalid username.');
     }
     
-    var userName=splitText[1];
-
-    let client = new DestinyApi(MyApiKey);
-
-    return client.searchPlayer({membershipType: DestinyApi.psn, displayName: userName})
-        .then(response => _process_command(response, command, userName));
+    var userName=splitText[1];    
+	
+	console.log(user_dictionary);
+	
+	if (typeof user_dictionary[userName] !== 'undefined' && user_dictionary[userName]) {
+		console.log('old user ' + userName);
+		return _process_command(user_dictionary[userName], command, userName);
+	}
+	else {
+		console.log('new user ' + userName);
+		let client = new DestinyApi(MyApiKey);    
+		return client.searchPlayer({membershipType: DestinyApi.psn, displayName: userName})
+			.then(response => _process_new_user_command(response, command, userName));
+	}	
 };
 
-function _process_command(response, command, userName) {
-    var user_id = _parse_response_for_id(response);
-	console.log(user_id);
+function _process_new_user_command(response, command, user_name) {
+	// Get user ID
+	user_id = _parse_response_for_id(response);
 	if(user_id == -1) {
 		return _build_base_message_promise('Username not found.');
 	}
+	console.log(user_id);
+	// Add user to dictionary
+	user_dictionary[user_name] = user_id;
+	
+	return _process_command(user_id, command, user_name);
+}
+
+function _process_command(user_id, command, userName) {
 	
     let client = new DestinyApi(MyApiKey);
 
