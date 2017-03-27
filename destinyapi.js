@@ -10,14 +10,14 @@ module.exports = {
 };
 
 const ghost_commands = {
-    kd: 'kd',
-    kda: 'kda',
-    time: 'time',
-	pvptime: 'pvptime',
-	pvetime: 'pvetime',
-	raids: 'raids',
-	strikes: 'strikes',
-    help: 'help',
+    kd: 'KD',
+    kda: 'KDA',
+    time: 'Time',
+	pvptime: 'PvPTime',
+	pvetime: 'PvETime',
+	raids: 'Raids',
+	strikes: 'Strikes',
+    help: 'Help',
 };
 
 function _build_private_message_promise(text_response) {
@@ -72,7 +72,9 @@ function _process_text(message) {
 		return _build_private_message_promise();
     }
     
-    var command = splitText[0];
+    var raw_command = splitText[0];
+	var command = raw_command.toLowerCase();
+
 
     if(command.indexOf('help') > -1) {
 		console.log('help passed');
