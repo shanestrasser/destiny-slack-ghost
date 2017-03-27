@@ -19,3 +19,10 @@ There are two options for testing:
         ```
         
         Here, I've used port 6000 and the subdirectory is ghost.io. To hit the URL from the outside, I only have to hit `mysite.com/ghost.io`. Make sure the port is in a valid range (I had troubles using 3000).
+
+
+
+TODO's List:
+
+1. Handle errors from Bungie.net
+2. Add command for Grimore
