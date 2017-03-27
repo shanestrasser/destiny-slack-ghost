@@ -7,6 +7,15 @@ const bodyParser = require('body-parser');
 const destinyapi = require('./destinyapi.js');
 const twitchapi = require('./twitchapi.js');
 
+const winston = require('winston')
+
+var logger = new(winston.Logger)({
+    transports: [
+        new(winston.transports.Console)(),
+        new(winston.transports.File)({filename: 'destiny_slack_bot.log'})
+    ]
+});
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -81,7 +90,7 @@ function handleQueries(q, res) {
     return;
 	*/
 	
-	console.log(q);
+	logger.log('info', q);
 	if(q.text) {
 		let code = q.text;
 		destinyapi.proccess_text(code).then(response => res.json(response));

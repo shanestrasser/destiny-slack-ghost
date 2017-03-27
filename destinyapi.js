@@ -1,5 +1,14 @@
 const DestinyApi = require('destiny-api-client');
 const MyApiKey = '39c516a91a234d1690f9d92079f9cbc4';
+const winston = require('winston')
+
+var logger = new(winston.Logger)({
+    transports: [
+        new(winston.transports.Console)(),
+        new(winston.transports.File)({filename: 'destiny_slack_bot.log'})
+    ]
+});
+
 
 var user_dictionary = new Object();
 
@@ -34,10 +43,11 @@ function _build_private_message(text_response = 'Help: commands are: ' + Object.
             text: text_response
         }]
     }
+	logger.log('info', response);
     return response;
 }
 
-function _build_public_message_promise(text_response) {
+function _build_public_message_promise(text_response) {	
 	return new Promise(function (fulfill, reject){
 		fulfill(_build_public_message(text_response));
 	});		
@@ -47,28 +57,29 @@ function _build_public_message(text_response) {
     var response = {
         response_type: 'in_channel', // public to the channle
         text: text_response,
-    }
+    }	
+	logger.log('info', response);
     return response;
 };
 
 function _process_text(message) {
 	
 	if((message.match(/ /g)||[]).length == message.length) {
-		console.log('only spaces passed in');
+		//console.log('only spaces passed in');
 		return _build_private_message_promise();
 	}
 	
 	// This is never called
 	if(message.length == 0) {
-		console.log('no text passed');
+		//console.log('no text passed');
 		return _build_private_message_promise();
     }
 	
     var splitText = message.toString().split(" "); 
-    console.log(splitText);
+    //console.log(splitText);
 
     if(splitText.length == 0) {
-		console.log('no space in text');
+		//console.log('no space in text');
 		return _build_private_message_promise();
     }
     
@@ -77,28 +88,28 @@ function _process_text(message) {
 
 
     if(command.indexOf('help') > -1) {
-		console.log('help passed');
+		//console.log('help passed');
 		return _build_private_message_promise();
     }
     
     if(splitText.length == 1) {
-		console.log('no username');
+		//console.log('no username');
 		return _build_private_message_promise('Username required.');
     } else if(splitText.length > 2) {
-		console.log('no username');
+		//console.log('no username');
 		return _build_private_message_promise('Invalid username.');
     }
     
     var userName=splitText[1];    
 	
-	console.log(user_dictionary);
+	//console.log(user_dictionary);
 	
 	if (typeof user_dictionary[userName] !== 'undefined' && user_dictionary[userName]) {
-		console.log('old user ' + userName);
+		//console.log('old user ' + userName);
 		return _process_command(user_dictionary[userName], command, userName);
 	}
 	else {
-		console.log('new user ' + userName);
+		//console.log('new user ' + userName);
 		let client = new DestinyApi(MyApiKey);    
 		return client.searchPlayer({membershipType: DestinyApi.psn, displayName: userName})
 			.then(response => _process_new_user_command(response, command, userName));
@@ -111,7 +122,7 @@ function _process_new_user_command(response, command, user_name) {
 	if(user_id == -1) {
 		return _build_base_message_promise('Username not found.');
 	}
-	console.log(user_id);
+	//console.log(user_id);
 	// Add user to dictionary
 	user_dictionary[user_name] = user_id;
 	
@@ -130,7 +141,7 @@ function _process_command(user_id, command, userName) {
 		    return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
                 .then(function(response) {
 					let RatioString = response.mergedAllCharacters.results.allPvP.allTime.killsDeathsRatio.basic.displayValue;
-					console.log(RatioString);
+					//console.log(RatioString);
 					return _build_public_message(userName + '\'s KD Ratio: ' + RatioString);
 				});
 			break;
@@ -138,7 +149,7 @@ function _process_command(user_id, command, userName) {
 			return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
                 .then(function(response) {
 				    let RatioString = response.mergedAllCharacters.results.allPvP.allTime.killsDeathsAssists.basic.displayValue;
-					console.log(RatioString);
+					//console.log(RatioString);
 					return _build_public_message(userName + '\'s KDA Ratio: ' + RatioString);
 				});
 			break;
@@ -146,7 +157,7 @@ function _process_command(user_id, command, userName) {
 			return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
                 .then(function(response) {
 				    let time = response.mergedAllCharacters.results.allPvP.allTime.totalActivityDurationSeconds.basic.displayValue;
-					console.log(time);
+					//console.log(time);
 					return _build_public_message(userName + '\'s Time in PvP: ' + time);
 				});
 			break;
@@ -154,7 +165,7 @@ function _process_command(user_id, command, userName) {
 			return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
                 .then(function(response) {
 				    let time = response.mergedAllCharacters.results.allPvE.allTime.totalActivityDurationSeconds.basic.displayValue;
-					console.log(time);
+					//console.log(time);
 					return _build_public_message(userName + '\'s Time in PvE: ' + time);
 				});
 			break;
@@ -162,7 +173,7 @@ function _process_command(user_id, command, userName) {
 			return client.accountStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id})
                 .then(function(response) {
 				    let time = response.mergedAllCharacters.merged.allTime.totalActivityDurationSeconds.basic.displayValue;
-					console.log(time);
+					//console.log(time);
 					return  _build_public_message(userName + '\'s Total Time On Destiny: ' + time);	
 				});
 			break;
@@ -170,7 +181,7 @@ function _process_command(user_id, command, userName) {
 			return client.characterStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id, characterId: 0})
                 .then(function(response) {
 				    let count = response.raid.allTime.activitiesCleared.basic.displayValue;
-					console.log(count);
+					//console.log(count);
 					return  _build_public_message(userName + '\'s Raids Completed: ' + count);	
 				});
 			break;
@@ -178,13 +189,13 @@ function _process_command(user_id, command, userName) {
 			return client.characterStats({membershipType: DestinyApi.psn, destinyMembershipId: user_id, characterId: 0})
                 .then(function(response) {
 				    let count = response.allStrikes.allTime.activitiesCleared.basic.displayValue;
-					console.log(count);
+					//console.log(count);
 					return  _build_public_message(userName + '\'s Strikes Completed: ' + count);	
 				});
 			break;
         case 'summary':
         default:
-			console.log('invalid command');
+			//console.log('invalid command');
 			return _build_private_message_promise('Invalid command. Valid commands are: '  + Object.keys(ghost_commands).join(', '));         
 			break;
     }
