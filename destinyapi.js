@@ -95,7 +95,7 @@ function _process_text(message) {
             return _build_private_message_promise();
             break;
         case 'wipe':
-            return _build_public_message('Just wipe', 'image_url: shanestrasser.com/ghost.io/images/wipe.gif');
+            return _build_public_message('Just wipe', 'image_url: http://i.imgur.com/Gpnhknd.gifv');
             break;
         default:
             break;
@@ -114,7 +114,7 @@ function _process_text(message) {
     // Special commands that only need a user name (but no user ID)
     switch(command) {
         case 'teabag':
-            return _build_public_message(userName + ' is Teabagged!', 'image_url: shanestrasser.com/ghost.io/images/teabag.gif');
+            return _build_public_message(userName + ' is Teabagged!', 'image_url: http://i.imgur.com/gthLgyk.gifv');
             break;
         default:
             break;
