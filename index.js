@@ -83,22 +83,22 @@ response:
   response_url: 'https://hooks.slack.com/commands/--- }
 */
 
-function handleQueries(q, res) {	
-	/*   if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
+function handleQueries(q, res) {
+    /*   if(q.token !== process.env.SLACK_VERIFICATION_TOKEN) {
     // the request is NOT coming from Slack!
-	console.log('doesnt like token')
+    console.log('doesnt like token')
     return;
-	*/
-	
-	logger.log('info', q);
-	if(q.text) {
-		let code = q.text;
-		destinyapi.proccess_text(code).then(response => res.json(response));
-	} else {
-		// Not sure we need this?
-		destinyapi.proccess_text('help').then(response => res.json(response));
-	}
-	
+    */
+
+    logger.log('info', q);
+    if(q.text) {
+        let code = q.text;
+        destinyapi.proccess_text(code).then(response => res.json(response));
+    } else {
+        // Not sure we need this?
+        destinyapi.proccess_text('help').then(response => res.json(response));
+    }
+
     /*
     if(! /^\d+$/.test(code)) { // not a digit
       res.send('U R DOIN IT WRONG. Enter a status code like 200 😒');
