@@ -116,7 +116,7 @@ function _process_text(message) {
         case 'teabag':
             return _build_public_message(userName + ' is Teabagged!', 'image_url: shanestrasser.com/ghost.io/images/teabag.gif');
             break;
-        case default:
+        default:
             break;
     }
 
