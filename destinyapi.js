@@ -47,20 +47,18 @@ function _build_private_message(text_response = 'Help: commands are: ' + Object.
     return response;
 }
 
-function _build_public_message_promise(text_response) {
+function _build_public_message_promise(text_response, attachment) {
     return new Promise(function (fulfill, reject){
-        fulfill(_build_public_message(text_response));
+        fulfill(_build_public_message(text_response, attachment));
     });
 }
 
-function _build_public_message(text_response, attachment_obj) {
+function _build_public_message(text_response, attachment) {
     var response = {
         response_type: 'in_channel', // public to the channle
         text: text_response,
-        attachments:[{
-            attachment_obj
-        }]
-    }
+        attachments: attachment
+    };
     logger.log('info', response);
     return response;
 };
@@ -95,7 +93,7 @@ function _process_text(message) {
             return _build_private_message_promise();
             break;
         case 'wipe':
-            return _build_public_message('Just wipe', 'image_url: http://i.imgur.com/Gpnhknd.gif');
+    return _build_public_message_promise('Just wipe', [{image_url: 'http://i.imgur.com/Gpnhknd.gif'}]);
             break;
         default:
             break;
@@ -114,7 +112,7 @@ function _process_text(message) {
     // Special commands that only need a user name (but no user ID)
     switch(command) {
         case 'teabag':
-            return _build_public_message(userName + ' is Teabagged!', 'image_url: http://i.imgur.com/gthLgyk.gif');
+            return _build_public_message_promise(userName + ' is Teabagged!', 'image_url: http://i.imgur.com/gthLgyk.gif');
             break;
         default:
             break;
