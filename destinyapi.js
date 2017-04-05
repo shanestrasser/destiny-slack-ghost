@@ -112,7 +112,7 @@ function _process_text(message) {
     // Special commands that only need a user name (but no user ID)
     switch(command) {
         case 'teabag':
-            return _build_public_message_promise(userName + ' is Teabagged!', 'image_url: http://i.imgur.com/gthLgyk.gif');
+    return _build_public_message_promise(userName + ' is Teabagged!', [{image_url: 'http://i.imgur.com/gthLgyk.gif'}]);
             break;
         default:
             break;
