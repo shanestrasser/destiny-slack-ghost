@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Slack app for getting Destiny stats.",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "standard"
+  },
   "dependencies": {	
 	"body-parser": "^1.15.2",
     "express": "^4.14.0",
@@ -17,9 +21,6 @@
     "foreman": "^2.0.0",
 	"request": "^2.75.0",
 	"destiny-api-client": "^0.1.1"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
